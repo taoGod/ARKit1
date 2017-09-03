@@ -46,17 +46,25 @@ class ViewController2: UIViewController {
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // 平面移动
         guard let touch = touches.first else {
             return
         }
         let preLocation = touch.previousLocation(in: sceneView)
         let location = touch.location(in: sceneView)
-        
+
         let x = Float(location.x - preLocation.x)
         let y = Float(location.y - preLocation.y)
-        
+
         let position = node.position
         node.position = SCNVector3(position.x + x/1000, position.y - y/1000, -0.5) // 垂直方向是反的
+        
+        // 3D 移动
+//        guard let cameraTransform = sceneView.session.currentFrame?.camera.transform else {
+//            return
+//        }
+//        let nodeTransform = node.simdTransform
+//        let value = nodeTransform[0] * nodeTransform[0] + nodeTransform[1] * nodeTransform[1] + nodeTransform[2] * nodeTransform[2]
     }
 }
 
