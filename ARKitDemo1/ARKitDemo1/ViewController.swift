@@ -290,10 +290,11 @@ extension ViewController: ARSCNViewDelegate {
         duration = duration / Double(images.count)
         var index = 0
         let timer = Timer(timeInterval: duration, repeats: true) { (tim) in
+            geometry.firstMaterial?.diffuse.contents = images[index]
+            index += 1
             if index == images.count {
                 index = 0
             }
-            geometry.firstMaterial?.diffuse.contents = images[index]
         }
         RunLoop.main.add(timer, forMode: .commonModes)
         
