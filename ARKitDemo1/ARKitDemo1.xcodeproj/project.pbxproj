@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B8D00AF1F5C386100824664 /* dota.gif in Resources */ = {isa = PBXBuildFile; fileRef = 0B8D00AE1F5C339600824664 /* dota.gif */; };
 		0BEB10161F5A346C004B57D0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEB10151F5A346C004B57D0 /* AppDelegate.swift */; };
 		0BEB10181F5A346C004B57D0 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BEB10171F5A346C004B57D0 /* art.scnassets */; };
 		0BEB101A1F5A346C004B57D0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEB10191F5A346C004B57D0 /* ViewController.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0B8D00AE1F5C339600824664 /* dota.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = dota.gif; sourceTree = "<group>"; };
 		0BEB10121F5A346B004B57D0 /* ARKitDemo1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARKitDemo1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BEB10151F5A346C004B57D0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0BEB10171F5A346C004B57D0 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -39,6 +41,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B8D00AD1F5C338400824664 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0B8D00AE1F5C339600824664 /* dota.gif */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		0BEB10091F5A346B004B57D0 = {
 			isa = PBXGroup;
 			children = (
@@ -58,6 +68,7 @@
 		0BEB10141F5A346B004B57D0 /* ARKitDemo1 */ = {
 			isa = PBXGroup;
 			children = (
+				0B8D00AD1F5C338400824664 /* Resources */,
 				0BEB10151F5A346C004B57D0 /* AppDelegate.swift */,
 				0BEB10171F5A346C004B57D0 /* art.scnassets */,
 				0BEB10191F5A346C004B57D0 /* ViewController.swift */,
@@ -129,6 +140,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B8D00AF1F5C386100824664 /* dota.gif in Resources */,
 				0BEB10181F5A346C004B57D0 /* art.scnassets in Resources */,
 				0BEB10221F5A346C004B57D0 /* LaunchScreen.storyboard in Resources */,
 				0BEB101F1F5A346C004B57D0 /* Assets.xcassets in Resources */,

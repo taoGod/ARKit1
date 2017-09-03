@@ -181,37 +181,30 @@ extension ViewController: ARSCNViewDelegate {
             geometry.firstMaterial?.lightingModel = .lambert
         case 4:
             geometry = SCNCylinder(radius: 0.04, height: 0.2)
-            geometry.firstMaterial?.diffuse.contents = UIColor.lightGray
+            geometry.firstMaterial?.diffuse.contents = UIImage(named: "brick")
         case 5:
             geometry = SCNCone(topRadius: 0.03, bottomRadius: 0.05, height: 0.06)
-            geometry.firstMaterial?.diffuse.contents = UIColor.red
+            geometry.firstMaterial?.diffuse.contents = UIImage(named: "brick")
         case 6:
             geometry = SCNTube(innerRadius: 0.006, outerRadius: 0.08, height: 0.05)
-            geometry.firstMaterial?.diffuse.contents = UIColor.lightGray
+            geometry.firstMaterial?.diffuse.contents = UIImage(named: "brick")
         case 7:
             geometry = SCNCapsule(capRadius: 0.02, height: 0.05)
-            geometry.firstMaterial?.diffuse.contents = UIColor.blue
+            geometry.firstMaterial?.diffuse.contents = UIImage(named: "brick")
         case 8:
             geometry = SCNTorus(ringRadius: 0.03, pipeRadius: 0.02)
-            geometry.firstMaterial?.diffuse.contents = UIColor.brown
+            geometry.firstMaterial?.diffuse.contents = UIImage(named: "brick")
         case 9:
             geometry = SCNFloor()
-            geometry.firstMaterial?.diffuse.contents = UIColor.white
+            geometry.firstMaterial?.diffuse.contents = UIImage(named: "brick")
         case 10:
-//            let attrStrM = NSMutableAttributedString()
-//            let attrStr1 = NSAttributedString(string: "Hello, ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 30.0), NSAttributedStringKey.backgroundColor: UIColor.purple])
-//            attrStrM.append(attrStr1)
-//            let attrStr2 = NSAttributedString(string: "world!", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 35.0), NSAttributedStringKey.backgroundColor: UIColor.yellow])
-//            attrStrM.append(attrStr2)
-            
-            geometry = SCNText(string: "Hello, world", extrusionDepth: 0.003)
-            geometry.firstMaterial?.diffuse.contents = UIColor.white
+            geometry = createTextGeometry()
         case 11:
-            let path = UIBezierPath()
-            path.move(to: CGPoint(x: 10, y: 50))
-            path.addCurve(to: CGPoint(x: 100, y: 50), controlPoint1: CGPoint(x: 140, y: 20), controlPoint2: CGPoint(x: 180, y: 80))
-            geometry = SCNShape(path: path, extrusionDepth: 0.01)
-            geometry.firstMaterial?.diffuse.contents = UIColor.red
+            geometry = createPathGeometry()
+        case 12:
+            geometry = createGitGeometry()
+        case 13:
+            print("vedio")
         default:
             let alert = UIAlertController(title: "请选择实体", message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "确定", style: .default, handler: {
@@ -233,6 +226,82 @@ extension ViewController: ARSCNViewDelegate {
         node.simdTransform = matrix_multiply(currentFrame.camera.transform, translate)
         
         return node
+    }
+    
+    private func createTextGeometry() -> SCNGeometry? {
+//        let attrStrM = NSMutableAttributedString()
+//        let attrStr1 = NSAttributedString(string: "Hello, ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 30.0), NSAttributedStringKey.backgroundColor: UIColor.purple])
+//        attrStrM.append(attrStr1)
+//        let attrStr2 = NSAttributedString(string: "world!", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 35.0), NSAttributedStringKey.backgroundColor: UIColor.yellow])
+//        attrStrM.append(attrStr2)
+        
+        let geometry = SCNText(string: "Hello, world", extrusionDepth: 0.003)
+        (geometry as! SCNText).font = UIFont.systemFont(ofSize: 30)
+        geometry.firstMaterial?.diffuse.contents = UIColor.white
+        return geometry
+    }
+    
+    private func createPathGeometry() -> SCNGeometry? {
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 10, y: 50))
+        path.addCurve(to: CGPoint(x: 100, y: 50), controlPoint1: CGPoint(x: 140, y: 20), controlPoint2: CGPoint(x: 180, y: 80))
+        let geometry = SCNShape(path: path, extrusionDepth: 0.01)
+        geometry.firstMaterial?.diffuse.contents = UIColor.red
+        return geometry
+    }
+    
+    private func createGitGeometry() -> SCNGeometry? {
+        guard let path = Bundle.main.path(forResource: "dota.gif", ofType: nil) else {
+            return nil
+        }
+        guard let data = NSData(contentsOfFile: path) else {
+            return nil
+        }
+        guard let imageSource = CGImageSourceCreateWithData(data, nil) else {
+            return nil
+        }
+        
+        let frameCount = CGImageSourceGetCount(imageSource)
+        var duration : TimeInterval = 0.0
+        var images = [UIImage]()
+        for index in 0..<frameCount {
+            guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource, index, nil) else {
+                return nil
+            }
+            
+            // 计算时间
+            guard let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, index, nil), let gifInfo = (properties as NSDictionary)[kCGImagePropertyGIFDictionary as String] as? NSDictionary,
+                let frameDuration = (gifInfo[kCGImagePropertyGIFDelayTime as String] as? NSNumber) else {
+                    continue
+            }
+            duration += frameDuration.doubleValue
+            
+            let image = UIImage(cgImage: cgImage)
+            images.append(image)
+        }
+        
+        let width = images[0].size.width
+        let height = images[0].size.height
+        let geometry = SCNPlane(width: width/6000, height: height/6000)
+        
+        // 这种方式在UIImageView可以，但在这不行
+//        geometry.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: images, duration: duration)
+        
+        duration = duration / Double(images.count)
+        var index = 0
+        let timer = Timer(timeInterval: duration, repeats: true) { (tim) in
+            if index == images.count {
+                index = 0
+            }
+            geometry.firstMaterial?.diffuse.contents = images[index]
+        }
+        RunLoop.main.add(timer, forMode: .commonModes)
+        
+        return geometry
+    }
+    
+    @objc fileprivate func timerAction(_ userInfo: NSDictionary) {
+        
     }
     
     // MARK: - ARSCNViewDelegate
