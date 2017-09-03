@@ -14,8 +14,12 @@ class ViewController2: UIViewController {
     
     @IBOutlet var sceneView: ARSCNView!
     
+    var node: SCNNode!
+    
     fileprivate lazy var imageNames = ["earth", "jupiter", "mars", "venus"]
     fileprivate var currentIndex: Int = 0
+    
+    var beginLocation: CGPoint?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +45,19 @@ class ViewController2: UIViewController {
         sceneView.session.pause()
     }
     
-    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else {
+            return
+        }
+        let preLocation = touch.previousLocation(in: sceneView)
+        let location = touch.location(in: sceneView)
+        
+        let x = Float(location.x - preLocation.x)
+        let y = Float(location.y - preLocation.y)
+        
+        let position = node.position
+        node.position = SCNVector3(position.x + x/1000, position.y - y/1000, -0.5) // 垂直方向是反的
+    }
 }
 
 // MARK: 设置UI及其事件
@@ -88,8 +104,8 @@ extension ViewController2: ARSCNViewDelegate {
         sphere.materials = [material]
         
         // 3、创建节点，设置节点位置，添加进scene
-        let node = SCNNode(geometry: sphere)
-        node.position = SCNVector3(0, 0, -0.5)
+        node = SCNNode(geometry: sphere)
+        node.position = SCNVector3(0, -0.05, -0.5)
         scene.rootNode.addChildNode(node)
         
         // 2、将scene设置为sceneView的scene

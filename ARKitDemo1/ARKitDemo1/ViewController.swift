@@ -203,10 +203,10 @@ extension ViewController: ARSCNViewDelegate {
             geometry = createPathGeometry()
         case 12:
             geometry = createGitGeometry()
-        case 13:
-            print("vedio")
+//        case 13:
+//            print("vedio")
         default:
-            let alert = UIAlertController(title: "请选择实体", message: nil, preferredStyle: .alert)
+            let alert = UIAlertController(title: "请选择 几何形", message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "确定", style: .default, handler: {
                 (UIAlertAction) -> Void in
                 alert.dismiss(animated: true, completion: nil)
