@@ -33,7 +33,6 @@ class ViewController2: UIViewController {
         
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
-        
         // Run the view's session
         sceneView.session.run(configuration)
     }
@@ -145,7 +144,6 @@ extension ViewController2: ARSCNViewDelegate {
             
             currentIndex += 1
         }
-        
     }
     
     // MARK: - ARSCNViewDelegate

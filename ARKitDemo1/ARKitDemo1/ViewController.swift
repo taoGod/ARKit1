@@ -146,16 +146,28 @@ extension ViewController: ARSCNViewDelegate {
     }
     
     @objc fileprivate func tapGesAction(_ tapGes: UITapGestureRecognizer) {
+        guard let currentFrame = sceneView.session.currentFrame else {
+            return
+        }
+        
+        
         guard let node = createNodeWithIndex(selectedIndex) else {
             return
         }
+        
+        // 追踪相机位置
+        var translate = matrix_identity_float4x4
+        translate.columns.3.z = -0.5
+        translate.columns.2.y = -0.05
+        
+        node.simdTransform = matrix_multiply(currentFrame.camera.transform, translate)
+        
         sceneView.scene.rootNode.addChildNode(node)
+        
     }
     
     private func createNodeWithIndex(_ index: Int) -> SCNNode? {
-        guard let currentFrame = sceneView.session.currentFrame else {
-            return nil
-        }
+        
         var geometry: SCNGeometry!
         switch index {
         case 0:
@@ -217,13 +229,6 @@ extension ViewController: ARSCNViewDelegate {
         
         let node = SCNNode(geometry: geometry)
         sceneView.scene.rootNode.addChildNode(node)
-        
-        // 追踪相机位置
-        var translate = matrix_identity_float4x4
-        translate.columns.3.z = -0.5
-        translate.columns.2.y = -0.05
-        
-        node.simdTransform = matrix_multiply(currentFrame.camera.transform, translate)
         
         return node
     }
